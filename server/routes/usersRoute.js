@@ -3,10 +3,11 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth")
-
+var nodeoutlook = require('nodejs-nodemailer-outlook')
 
 router.post("/register", async (req, res) => {
   try {
+    
 
     const userExists = await User.findOne({ email: req.body.email });
     if (userExists) {
@@ -27,8 +28,40 @@ router.post("/register", async (req, res) => {
 
     res.send({ 
       success: true, 
-      message: "Registration Successful" 
+      message: "Verfication code sent to email" 
+
     });
+
+    
+
+    code = Math.floor(Math.random() * (99999-10000))
+
+    nodeoutlook.sendEmail({
+      auth: {
+          user: "yl205@outlook.com",
+          pass: "lhs52329"
+      },
+      from: 'yl205@outlook.com',
+      to: req.body.email,
+      subject: 'Verification Email',
+      html: 'Thank you for registering with us. Before you can proceed, please enter the given verification code: ' + code,
+      text: 'This is text version!',
+      onError: (e) => console.log(e),
+    onSuccess: (i) => console.log(i)
+    },
+
+    function validateForm() {
+      let x = document.forms["myForm"]["fname"].value;
+      if (x == "") {
+        alert("Name must be filled out");
+        return false;
+      } 
+    }
+
+    );
+
+   
+
   } catch (error) {
     res.send({
       success: false,
@@ -80,7 +113,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("current-user", auth, async(req,res)=> {
+router.get("/current-user", auth, async(req,res)=> {
   try{
     const user = await User.findById(req.body.userId).select("-password");
     res.send({

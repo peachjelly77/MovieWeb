@@ -27,3 +27,13 @@ export const CurrentUser = async () => {
         return error;
     }
 }
+
+export const editProfile = async () => {
+    try {
+        const response = await axiosInstance.patch("/api/users/editProfile");
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+    
+}

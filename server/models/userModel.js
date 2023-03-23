@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const movieSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
@@ -56,9 +56,18 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: false,
     },
+    isSubscribed:{
+        type:Boolean,
+        default:false,
+    },
+    userStatus: {
+        type:String,
+        enum:["INACTIVE", "ACTIVE", "SUSPENDED"],
+        default:"INACTIVE",
+    }
 },
     {
         timestamps: true,
     }
 );
-module.exports = mongoose.model("users", userSchema);
+module.exports = mongoose.model("users", movieSchema);
